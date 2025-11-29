@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from "expo-constants";
 
 
 export default function Chatbot() {
@@ -22,6 +23,7 @@ export default function Chatbot() {
   const scrollViewRef = useRef();
   const router = useRouter();
   const [userId, setUserId] = useState(null);
+  const baseURL = Constants.expoConfig.extra.BASE_URL;
   useEffect(() => {
       const fetchData = async () => {
         const storedId = await AsyncStorage.getItem("userId");
@@ -118,7 +120,7 @@ export default function Chatbot() {
           style={styles.input}
           value={query}
           onChangeText={(text) => setQuery(text)}
-          placeholder="Ask job query..."
+          placeholder="Ask me..."
           onSubmitEditing={fetchAndSendToChatbot}
           returnKeyType="send"
           blurOnSubmit={true}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import Constants from "expo-constants";
 
 
 export default function ResetPassword() {
@@ -10,6 +11,7 @@ export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
+ const baseURL = Constants.expoConfig.extra.BASE_URL;
 
   const handleReset = async () => {
     if (!email || !token || !newPassword) {

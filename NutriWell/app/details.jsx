@@ -8,6 +8,7 @@ import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   ScrollView, Alert, FlatList, Modal,
 } from 'react-native';
+import Constants from "expo-constants"
 
 const indianStates = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa',
@@ -31,6 +32,7 @@ export default function Details() {
   const [errors, setErrors] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [userId, setUserId] = useState(null);
+ const baseURL = Constants.expoConfig.extra.BASE_URL;
 
   const validatePage1 = () => {
     const newErrors = {};

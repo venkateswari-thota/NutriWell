@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import Constants from "expo-constants";
 
 
 export default function ForgotPassword() {
@@ -9,6 +10,7 @@ export default function ForgotPassword() {
   const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
+  const baseURL = Constants.expoConfig.extra.BASE_URL;
 
   const handleForgotPassword = async () => {
     if (!email) {

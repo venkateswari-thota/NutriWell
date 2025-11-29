@@ -6,7 +6,7 @@ import { PieChart } from 'react-native-chart-kit';
 import * as Progress from 'react-native-progress';
 import img from "../assets/images/blue_green.jpeg";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Constants from "expo-constants";
 
 const dietPlans = [
   {
@@ -98,7 +98,8 @@ export default function NutriWellHomeScreen() {
     });
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
-    const [userId, setUserId] = useState(null)
+    const [userId, setUserId] = useState(null);
+    const baseURL = Constants.expoConfig.extra.BASE_URL;
     
 
     

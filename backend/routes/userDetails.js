@@ -6,6 +6,9 @@ const User = require("../models/UserDetails");
 const mongoose = require("mongoose");
 const moment = require("moment-timezone");
 const { getAllNotifications } = require('../storage/store');
+require("dotenv").config();
+
+const baseURL = process.env.BASE_URL;
 const getIndianDate = () => {
   // Create date object
   const date = new Date();
