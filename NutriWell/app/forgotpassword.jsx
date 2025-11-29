@@ -20,7 +20,7 @@ export default function ForgotPassword() {
     }
 
     try {
-      const res = await fetch("http://192.168.137.1:5000/api/auth/forgot-password", {
+      const res = await fetch("http://192.168.1.3:5000/api/auth/forgot-password", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -29,7 +29,7 @@ export default function ForgotPassword() {
       const data = await res.json();
       setMessage(data.message || 'Check your email for the reset link');
       setErrorMessage('');
-      console.log("message",message);
+      console.log("message", message);
       // Optional redirect after 5 seconds
       setTimeout(() => {
         router.push('/signup');

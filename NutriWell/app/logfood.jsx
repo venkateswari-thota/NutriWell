@@ -28,7 +28,7 @@ const SnapMeal = () => {
   const [carbs, setCarbs] = useState(0);
   const [protein, setProtein] = useState(0);
   const [fat, setFat] = useState(0);
-  
+
   const [userId, setUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(false); // Changed initial state to false for better flow
   const baseURL = Constants.expoConfig.extra.BASE_URL;
@@ -49,27 +49,27 @@ const SnapMeal = () => {
 
   // --- NEW UTILITY FUNCTION TO COMPRESS IMAGE ---
   const compressImage = async (uri) => {
-  try {
-    const result = await ImageManipulator.manipulateAsync(
-      uri,
-      [{ resize: { width: 600 } }],   // <--- Resize
-      { 
-        compress: 0.3,                // <--- Strong compression
-        format: ImageManipulator.SaveFormat.JPEG
-      }
-    );
+    try {
+      const result = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: 600 } }],   // <--- Resize
+        {
+          compress: 0.3,                // <--- Strong compression
+          format: ImageManipulator.SaveFormat.JPEG
+        }
+      );
 
-    // Check final compressed size
-    const info = await FileSystem.getInfoAsync(result.uri);
-    console.log("Final Compressed Size (bytes):", info.size);
+      // Check final compressed size
+      const info = await FileSystem.getInfoAsync(result.uri);
+      console.log("Final Compressed Size (bytes):", info.size);
 
-    return result.uri;
+      return result.uri;
 
-  } catch (error) {
-    console.error("Compression failed:", error);
-    return uri;
-  }
-};
+    } catch (error) {
+      console.error("Compression failed:", error);
+      return uri;
+    }
+  };
 
   // ---------------------------------------------
 
@@ -85,42 +85,42 @@ const SnapMeal = () => {
 
       // Check if image is still too large after compression (optional safeguard)
       if (base64.length > 16 * 1024 * 1024 * 0.75) { // Roughly 12MB limit for the Base64 string payload
-         throw new Error("Compressed image is still too large (over ~12MB Base64 limit).");
+        throw new Error("Compressed image is still too large (over ~12MB Base64 limit).");
       }
-      
-      const response = await fetch(`http://192.168.137.1:5000/api/details/upload-image`, {
+
+      const response = await fetch(`http://192.168.1.3:5000/api/details/upload-image`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: userId, 
+          userId: userId,
           base64Image: base64,
         }),
       });
-      
+
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Upload failed");
 
       setSummary(data.food.summary || "No summary returned");
 
-     // Safely parse the calorie response
-const calorieInfo = data.food.calorieInfo || "0, 0, 0, 0";
-const parts = calorieInfo.split(",").map(x => safeParseInt(x.trim()));
+      // Safely parse the calorie response
+      const calorieInfo = data.food.calorieInfo || "0, 0, 0, 0";
+      const parts = calorieInfo.split(",").map(x => safeParseInt(x.trim()));
 
-// Extract nutrients safely
-const [totalCalories, carbsVal, proteinVal, fatVal] = parts.length === 4
-  ? parts
-  : [0, 0, 0, 0];
+      // Extract nutrients safely
+      const [totalCalories, carbsVal, proteinVal, fatVal] = parts.length === 4
+        ? parts
+        : [0, 0, 0, 0];
 
-// Set nutrient states
-setCarbs(carbsVal);
-setProtein(proteinVal);
-setFat(fatVal);
+      // Set nutrient states
+      setCarbs(carbsVal);
+      setProtein(proteinVal);
+      setFat(fatVal);
 
-console.log("Frontend macro nutrients:", carbsVal, proteinVal, fatVal);
+      console.log("Frontend macro nutrients:", carbsVal, proteinVal, fatVal);
 
-// 🔥 Correct placement — compute AFTER the values exist
-const maxVal = Math.max(carbsVal, proteinVal, fatVal, 1);
-setMaxNutrient(maxVal);
+      // 🔥 Correct placement — compute AFTER the values exist
+      const maxVal = Math.max(carbsVal, proteinVal, fatVal, 1);
+      setMaxNutrient(maxVal);
 
 
     } catch (err) {
@@ -142,14 +142,14 @@ setMaxNutrient(maxVal);
   const processImageAndUpload = async (uri) => {
     setIsLoading(true);
     setSubmitted(true);
-    
+
     try {
       // 1. Set the original URI for display immediately
-      setImage(uri); 
+      setImage(uri);
 
       // 2. COMPRESS the image before converting to Base64
       const compressedUri = await compressImage(uri);
-      
+
       // 3. Upload the compressed image URI
       await uploadImageToBackend(compressedUri);
     } catch (error) {
@@ -162,7 +162,7 @@ setMaxNutrient(maxVal);
   const pickImage = async () => {
     try {
       const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
+
       if (!permission.granted) {
         // Use console.error instead of alert per instructions
         console.error("Permission to access gallery is required!");
@@ -187,7 +187,7 @@ setMaxNutrient(maxVal);
   const captureImage = async () => {
     try {
       const permission = await ImagePicker.requestCameraPermissionsAsync();
-      
+
       if (!permission.granted) {
         // Use console.error instead of alert per instructions
         console.error("Permission to access camera is required!");
@@ -221,9 +221,9 @@ setMaxNutrient(maxVal);
   const goToDashboard = () => {
     router.push("/dashboard");
   };
-  
 
-  
+
+
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" enabled>
       <ImageBackground
@@ -313,8 +313,8 @@ setMaxNutrient(maxVal);
                           <Text style={styles.statLabel}>Protein</Text>
                           <Progress.Circle
                             size={80}
-                             // Clamping progress to ensure it's between 0 and 1
-                            progress={Math.min(1, Math.max(0, protein / maxNutrient))} 
+                            // Clamping progress to ensure it's between 0 and 1
+                            progress={Math.min(1, Math.max(0, protein / maxNutrient))}
                             showsText
                             formatText={() => `${protein}g`}
                             color="#FF6A5C"
@@ -327,8 +327,8 @@ setMaxNutrient(maxVal);
                           <Text style={styles.statLabel}>Fat</Text>
                           <Progress.Circle
                             size={80}
-                             // Clamping progress to ensure it's between 0 and 1
-                            progress={Math.min(1, Math.max(0, fat / maxNutrient))} 
+                            // Clamping progress to ensure it's between 0 and 1
+                            progress={Math.min(1, Math.max(0, fat / maxNutrient))}
                             showsText
                             formatText={() => `${fat}g`}
                             color="#82B1FF"
@@ -495,7 +495,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
-  
+
 });
 
 export default SnapMeal;

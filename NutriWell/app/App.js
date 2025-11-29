@@ -6,19 +6,32 @@ import {
   Image,
   ScrollView,
   ImageBackground,
-  TouchableOpacity, 
+  TouchableOpacity,
 } from 'react-native';
-import { useRouter } from 'expo-router'; 
+import { useRouter } from 'expo-router';
 
 export default function App() {
   const router = useRouter();
   const [notifications, setNotifications] = useState([]);
 
-  useEffect(() => {
-    fetch("192.168.137.1:6000/api/notifications/get")
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+
+  const fetchNotifications = () => {
+    fetch("http://localhost:6001/api/notifications/get")
       .then(res => res.json())
-      .then(data => setNotifications(data))
+      .then(data => {
+        setNotifications(data);
+        setLastUpdated(new Date());
+      })
       .catch(err => console.error('Error fetching notifications:', err));
+  };
+
+  useEffect(() => {
+    fetchNotifications(); // Fetch immediately on mount
+
+    const interval = setInterval(fetchNotifications, 10000); // Fetch every 10 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   return (
@@ -28,10 +41,11 @@ export default function App() {
       resizeMode="cover"
     >
       <View style={styles.overlay}>
-      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.title}>NutriWell Notifications</Text>
+
         <ScrollView contentContainerStyle={styles.notificationWrapper}>
           {notifications.map((note, index) => (
             <View
@@ -65,34 +79,34 @@ const styles = StyleSheet.create({
     //backgroundImage: 'url("./assets/images/not_back4.jpeg")', // Expo doesn't support background-image, use `ImageBackground` if needed
     alignItems: 'center',
   },
-    background: {
-      flex: 1,
-      width: '100%',
-      height: '100%',
-    },
-    overlay: {
-      flex: 1,
-      paddingTop: 60,
-      paddingBottom: 30,
-      paddingHorizontal: 20,
-      alignItems: 'center',
-      backgroundColor: 'rgba(0,0,0,0.3)', // semi-transparent overlay for readability
-    },
-    backButton: {
-      position: 'absolute',
-      top: 20,
-      left: 20,
-      backgroundColor: '#ffffffaa',
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      borderRadius: 8,
-      zIndex: 10,
-    },
-    backButtonText: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: '#333',
-    },
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    flex: 1,
+    paddingTop: 60,
+    paddingBottom: 30,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.3)', // semi-transparent overlay for readability
+  },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    backgroundColor: '#ffffffaa',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  backButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',

@@ -160,20 +160,20 @@ export default function Tracking() {
   const baseURL = Constants.expoConfig.extra.BASE_URL;
 
   useEffect(() => {
-      const fetchData = async () => {
-        const storedId = await AsyncStorage.getItem("userId");
-        console.log('storedid from tracking',storedId)
-        if (storedId) {
-          console.log("User ID from tracking:", storedId);
+    const fetchData = async () => {
+      const storedId = await AsyncStorage.getItem("userId");
+      console.log('storedid from tracking', storedId)
+      if (storedId) {
+        console.log("User ID from tracking:", storedId);
         setUserId(storedId);
         fetchDailyTotals(storedId);
         fetchWeeklyTotals(storedId);
-        }
-      };
-      fetchData();
-    }, []);
-    
-  
+      }
+    };
+    fetchData();
+  }, []);
+
+
   // useEffect(() => {
   //   fetchUserId();
   //   const fetchMeals = async () => {
@@ -195,15 +195,15 @@ export default function Tracking() {
     const fetchMeals = async () => {
       try {
         setLoading(true);
-        console.log("sending user id to meals route from tracking",userId)
-        const response = await fetch(`http://192.168.137.1:5000/api/details/${userId}/meals`);
-        
+        console.log("sending user id to meals route from tracking", userId)
+        const response = await fetch(`http://192.168.1.3:5000/api/details/${userId}/meals`);
+
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`);
         }
-        
+
         const data = await response.json();
-        console.log("meals data",meals)
+        console.log("meals data", meals)
         setMeals(data);
       } catch (error) {
         console.error('Fetch error:', error);
@@ -213,7 +213,7 @@ export default function Tracking() {
         setLoading(false);
       }
     };
-  
+
     if (userId) fetchMeals();
   }, [userId]);
 

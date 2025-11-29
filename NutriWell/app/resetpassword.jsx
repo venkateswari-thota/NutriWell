@@ -11,7 +11,7 @@ export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
- const baseURL = Constants.expoConfig.extra.BASE_URL;
+  const baseURL = Constants.expoConfig.extra.BASE_URL;
 
   const handleReset = async () => {
     if (!email || !token || !newPassword) {
@@ -20,7 +20,7 @@ export default function ResetPassword() {
     }
 
     try {
-      const res = await fetch(`http://192.168.137.1:5000/api/auth/reset-password/${token}`, {
+      const res = await fetch(`http://192.168.1.3:5000/api/auth/reset-password/${token}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ newPassword }),
@@ -78,58 +78,57 @@ export default function ResetPassword() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#BEAFDA',
-      padding: 20,
-      justifyContent: 'center',
-    },
-    backBtn: {
-      position: 'absolute',
-      top: 50,
-      left: 20,
-    },
-    title: {
-      fontSize: 22,
-      fontWeight: 'bold',
-      textAlign: 'center',
-      marginBottom: 20,
-    },
-    input: {
-      backgroundColor: '#f0f2f5',
-      padding: 12,
-      borderRadius: 10,
-      marginBottom: 15,
-    },
-    checkboxContainer: {
-      marginBottom: 15,
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    checkbox: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    checkboxLabel: {
-      fontSize: 14,
-      color: '#333',
-      marginLeft: 8,
-    },
-    button: {
-      backgroundColor: '#6C63FF',
-      padding: 14,
-      borderRadius: 12,
-      alignItems: 'center',
-    },
-    buttonText: {
-      color: '#fff',
-      fontWeight: '600',
-      fontSize: 16,
-    },
-    message: {
-      textAlign: 'center',
-      color: '#333',
-      marginBottom: 10,
-    },
-  });
-  
+  container: {
+    flex: 1,
+    backgroundColor: '#BEAFDA',
+    padding: 20,
+    justifyContent: 'center',
+  },
+  backBtn: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  input: {
+    backgroundColor: '#f0f2f5',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  checkboxContainer: {
+    marginBottom: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkbox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkboxLabel: {
+    fontSize: 14,
+    color: '#333',
+    marginLeft: 8,
+  },
+  button: {
+    backgroundColor: '#6C63FF',
+    padding: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  message: {
+    textAlign: 'center',
+    color: '#333',
+    marginBottom: 10,
+  },
+});

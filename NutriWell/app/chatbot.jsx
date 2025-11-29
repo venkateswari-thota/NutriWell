@@ -25,59 +25,59 @@ export default function Chatbot() {
   const [userId, setUserId] = useState(null);
   const baseURL = Constants.expoConfig.extra.BASE_URL;
   useEffect(() => {
-      const fetchData = async () => {
-        const storedId = await AsyncStorage.getItem("userId");
-        console.log('storedid from chatbot',storedId)
-        if (storedId) {
-          console.log("User ID from chatbot:", storedId);
+    const fetchData = async () => {
+      const storedId = await AsyncStorage.getItem("userId");
+      console.log('storedid from chatbot', storedId)
+      if (storedId) {
+        console.log("User ID from chatbot:", storedId);
         setUserId(storedId);
         fetchDailyTotals(storedId);
         fetchWeeklyTotals(storedId);
-        }
-      };
-      fetchData();
-    }, []);
-    
+      }
+    };
+    fetchData();
+  }, []);
+
 
   const fetchAndSendToChatbot = async () => {
     const trimmedQuery = query.trim();
     if (!trimmedQuery) return; // Ensure there's a query to send
-    
-    const userChat = { userId: "User", text: trimmedQuery };
-  
+
+    const userChat = { user: "User", text: trimmedQuery };
+
     // Clear the input first
     setQuery("");
-    
+
     // Add user query to chat history
     setChats((prevChats) => [...prevChats, userChat]);
-  
+
     try {
       // 1. Fetch today's meals and nutrition from Node.js backend
-      console.log("user id before backend api",userId);
-      const response = await fetch(`http://192.168.137.1:5000/api/details/${userId}/getTodaysMealsAndNutrition`);
+      console.log("user id before backend api", userId);
+      const response = await fetch(`http://192.168.1.3:5000/api/details/${userId}/getTodaysMealsAndNutrition`);
       const mealData = await response.json(); // ✅ Store it in a variable
-  
+
       console.log("meal data from backend", mealData);
-  
+
       // 2. Send it to the Flask chatbot server
-      const chatbotResponse = await axios.post("192.168.137.1:5001/chatbot", {
+      const chatbotResponse = await axios.post("http://192.168.1.3:5001/chatbot", {
         userData: mealData,
         query: trimmedQuery,
       });
-  
+
       console.log("Chatbot says:", chatbotResponse.data.response);
-  
+
       // Add chatbot response to chat history
       const botChat = { user: "VitaBot", text: chatbotResponse.data.response };
       setChats((prevChats) => [...prevChats, botChat]);
-  
+
     } catch (err) {
       console.error("Error fetching or sending data:", err);
       const errorChat = { user: "VitaBot", text: "Something went wrong." };
       setChats((prevChats) => [...prevChats, errorChat]);
     }
   };
-  
+
 
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true });

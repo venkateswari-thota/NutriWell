@@ -22,36 +22,36 @@
 //       setError('Please fill all fields');
 //       return;
 //     }
-  
+
 //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 //     if (!emailRegex.test(email)) {
 //       setError('Please enter a valid email');
 //       return;
 //     }
-  
+
 //     if (password.length < 6) {
 //       setError('Password must be at least 6 characters');
 //       return;
 //     }
-  
+
 //     try {
 //       const endpoint = isLogin
 //         ? `http://192.168.1.27:5000/api/auth/login`
 //         : `http://192.168.1.27:5000/api/auth/signup`;
-  
+
 //       const payload = isLogin
 //         ? { email, password }
 //         : { fullName, email, password };
-  
+
 //       const res = await fetch(endpoint, {
 //         method: 'POST',
 //         headers: { 'Content-Type': 'application/json' },
 //         body: JSON.stringify(payload),
 //       });
-  
+
 //       const text = await res.text();
 //       //console.log("📦 Raw server response:", text);
-  
+
 //       let data;
 //       try {
 //         data = JSON.parse(text);
@@ -60,20 +60,20 @@
 //         setError("Server error — not returning JSON");
 //         return;
 //       }
-  
+
 //       if (!res.ok) {
 //         setError(data.message || 'Something went wrong');
 //         return;
 //       }
-  
+
 //       console.log('✅ Auth Success:', data.user);
-      
+
 //       // ✅ Save full user data in context + AsyncStorage
 //       if (data?.user) {
 //         //await login(data);  Save globally
 //         console.log("🌍 User logged in globally:", data);
 //       }
-  
+
 //       // Optional: Save userId separately if needed
 //       const userId = data.user._id.toString();
 //       console.log("user id in signup.jsx",userId)
@@ -85,13 +85,13 @@
 
 //       // Navigate based on login/signup
 //       router.replace(isLogin ? "/Intro" : "/details");
-  
+
 //     } catch (err) {
 //       setError('Network error. Please try again later.');
 //       console.error('❌ Error:', err);
 //     }
 //   };
-  
+
 
 //   return (
 //     <View style={styles.container}>
@@ -253,7 +253,7 @@ import Constants from "expo-constants";
 
 
 export default function AuthScreen() {
-  const router=useRouter();
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -267,36 +267,36 @@ export default function AuthScreen() {
       setError('Please fill all fields');
       return;
     }
-  
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email');
       return;
     }
-  
+
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
       return;
     }
-  
+
     try {
       const endpoint = isLogin
-        ? "http://192.168.137.1:5000/api/auth/login"
-        : "http://192.168.137.1:5000/api/auth/signup";
-  
+        ? "http://192.168.1.3:5000/api/auth/login"
+        : "http://192.168.1.3:5000/api/auth/signup";
+
       const payload = isLogin
         ? { email, password }
         : { fullName, email, password };
-  
+
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-  
+
       const text = await res.text();
       //console.log("📦 Raw server response:", text);
-  
+
       let data;
       try {
         data = JSON.parse(text);
@@ -305,36 +305,36 @@ export default function AuthScreen() {
         setError("Server error — not returning JSON");
         return;
       }
-  
+
       if (!res.ok) {
         setError(data.message || 'Something went wrong');
         return;
       }
-  
+
       console.log('✅ Auth Success:', data.user);
-      
+
       // ✅ Save full user data in context + AsyncStorage
       if (data?.user) {
         console.log("🌍 User logged in globally:", data);
         const userId = data.user._id.toString();
-        console.log("user id in signup.jsx",userId)
-      
+        console.log("user id in signup.jsx", userId)
+
         await AsyncStorage.setItem("userId", userId);
         const storedId = await AsyncStorage.getItem("userId");
         console.log("📦 Stored user ID in string in signup:", storedId);
       }
-  
-   
+
+
 
       // Navigate based on login/signup
       router.replace(isLogin ? "/Intro" : "/details");
-  
+
     } catch (err) {
       setError('Network error. Please try again later.');
       console.error('❌ Error:', err);
     }
   };
-  
+
 
   return (
     <View style={styles.container}>
@@ -384,9 +384,9 @@ export default function AuthScreen() {
         </View>
 
         {isLogin && (
-           <TouchableOpacity onPress={() => router.push("/forgotpassword")}>
-           <Text style={styles.forgot}>Forgot Password ?</Text>
-         </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/forgotpassword")}>
+            <Text style={styles.forgot}>Forgot Password ?</Text>
+          </TouchableOpacity>
         )}
 
         <TouchableOpacity style={styles.button} onPress={handleAuth}>
